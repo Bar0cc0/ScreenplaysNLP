@@ -258,10 +258,10 @@ The PostgreSQL database implements a schema optimized for dialogue comparison an
 
 ```sql
 CREATE TABLE screenplay(
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY NOT NULL,
     timecode TEXT,
     part TEXT,
-    script_text TEXT NOT NULL,
+    script_text TEXT,
     subtitle_text TEXT,
     similarity_score FLOAT,
 	topic_label	INT,
