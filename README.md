@@ -27,7 +27,7 @@ A natural language processing tool for analyzing screenplays and extracting insi
 ```bash
 docker-compose build
 ```
-- Run the container:
+- Run the containers:
  ```bash
 docker-compose up -d
 ```
