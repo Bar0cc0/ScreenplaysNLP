@@ -1,0 +1,40 @@
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+      - ./init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+
+  airflow:
+    build: .
+    depends_on:
+      - postgres
+    environment:
+      - AIRFLOW_VERSION=2.7.3
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+      - AIRFLOW__CORE__FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
+      - PGUSER=airflow
+      - PGPASSWORD=airflow
+      - PGDATABASE=airflow
+      - PGHOST=postgres
+    volumes:
+      - ./scripts:/opt/airflow/ScreenplaysNLP/Scripts
+      - ./data:/opt/airflow/ScreenplaysNLP/Data
+      - ./Rflow.py:/opt/airflow/dags/Rflow.py
+      - ./logs:/opt/airflow/logs
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres-db-volume:
